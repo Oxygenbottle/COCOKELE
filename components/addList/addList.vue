@@ -1,10 +1,10 @@
 <template>
-  <view class="add-content">
-    <view class="text-area" @click="openDialog">
-      <text class="title">{{ title }}</text>
-    </view>
+  <div class="add-content">
+    <div class="text-area" @click="openDialog">
+      <span class="title">{{ title }}</span>
+    </div>
     <ddList ref="ddList"></ddList>
-  </view>
+  </div>
 </template>
 <script>
 import ddList from "../ddList/ddList.vue";
@@ -13,9 +13,10 @@ export default {
   data() {
     return {
       title: "+",
+
     };
   },
-  onLoad() {},
+  onLoad() { },
   methods: {
     openDialog() {
       console.log("this.$refs.ddList", this.$refs);
