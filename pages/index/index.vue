@@ -1,24 +1,19 @@
 <template>
   <view class="content">
-    <view class="text-area">
-      <text class="title">{{ title }}</text>
-    </view>
+    <img class="adv_slide" src="@/assets/imgs/wide-img-ruanmei.jpg" alt="">
     <addList></addList>
-    <lottieCanvas></lottieCanvas>
   </view>
 </template>
 <script>
-import lottieCanvas from "../../components/lottieCanvas/lottieCanvas.vue";
 import addList from "../../components/addList/addList.vue";
 export default {
-  components: { lottieCanvas, addList },
+  components: { addList },
   data() {
     return {
       title: "Hello",
-      inited: false,
     };
   },
-  onLoad() {},
+  onLoad() { },
   methods: {},
 };
 </script>
@@ -31,16 +26,12 @@ export default {
   justify-content: center;
 }
 
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
+.adv_slide {
+  width: 100vw;
+  height: 56.25vw;
 }
 
-.text-area {
+.top-adv {
   display: flex;
   justify-content: center;
 }

@@ -19,7 +19,6 @@ export default {
   onLoad() { },
   methods: {
     openDialog() {
-      console.log("this.$refs.ddList", this.$refs);
       this.$refs.ddList.open();
     },
   },
@@ -28,12 +27,12 @@ export default {
 
 <style>
 .add-content {
-  width: 50rpx;
-  height: 50rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
   background-color: #e6e5ea;
   color: #6d6c70;
-  line-height: 50rpx;
+  line-height: 80rpx;
   text-align: center;
   padding-bottom: 4rpx;
   position: fixed;

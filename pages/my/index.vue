@@ -1,8 +1,12 @@
 <template>
-  <view class="content"> my.vue </view>
+  <view class="content">
+    <lottieCanvas></lottieCanvas>
+  </view>
 </template>
 <script>
+import lottieCanvas from "@/components/lottieCanvas/lottieCanvas.vue";
 export default {
+  components: { lottieCanvas },
   data() {
     return {
       title: "Hello",
@@ -15,4 +19,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+</style>
