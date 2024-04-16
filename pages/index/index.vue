@@ -1,6 +1,9 @@
 <template>
   <view class="content">
-    <img class="adv_slide" src="@/assets/imgs/wide-img-ruanmei.jpg" alt="">
+    <div class="topBox">
+      <img class="adv_slide" src="../../assets/imgs/topImg.jpg" alt="">
+    </div>
+    <div>大别墅</div>
     <addList></addList>
   </view>
 </template>
@@ -24,6 +27,13 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+
+  /* .topBox {
+    position: absolute;
+    top: 0;
+    left: 0;
+  } */
 }
 
 .adv_slide {

@@ -163,10 +163,12 @@ export default {
 @keyframes fadeIn {
   from {
     background-color: #00000000;
+    clip-path: circle(0% at 10% 70%);
   }
 
   to {
     background-color: #ffffff5a;
+    clip-path: circle(100% at 10% 70%);
     backdrop-filter: saturate(150%) contrast(50%) blur(8px);
   }
 }
