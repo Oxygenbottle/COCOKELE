@@ -7,9 +7,9 @@
       </div>
     </div>
     <div class="shadow_box" :class="[
-      animationShow ? 'fadeIn' : 'fadeOut',
-      shadowShow ? 'shadow_box_on' : ''
-    ]" @click="close"></div>
+    animationShow ? 'fadeIn' : 'fadeOut',
+    shadowShow ? 'shadow_box_on' : ''
+  ]" @click="close"></div>
   </div>
 </template>
 <script>

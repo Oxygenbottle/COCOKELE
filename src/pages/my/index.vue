@@ -4,7 +4,7 @@
   </view>
 </template>
 <script>
-import lottieCanvas from "@/components/lottieCanvas/lottieCanvas.vue";
+import lottieCanvas from "../../components/lottieCanvas/lottieCanvas.vue";
 export default {
   components: { lottieCanvas },
   data() {
