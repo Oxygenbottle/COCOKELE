@@ -1,23 +1,31 @@
 <template>
   <view class="content">
     <div class="topBox">
-      <img class="adv_slide" src="../../assets/imgs/topImg.jpg" alt="">
+      <img class="adv_slide" src="../../assets/imgs/topImg.jpg" alt="" />
     </div>
     <div>大别墅</div>
+    <button @click="switchTab">切换switch</button>
     <addList></addList>
   </view>
 </template>
 <script>
-import addList from "../../components/addList/addList.vue";
+import addList from '../../components/addList/addList.vue';
+
 export default {
   components: { addList },
   data() {
     return {
-      title: "Hello",
+      title: 'Hello'
     };
   },
-  onLoad() { },
-  methods: {},
+  onLoad() {},
+  methods: {
+    switchTab() {
+      uni.switchTab({
+        url: '/pages/my/index'
+      });
+    }
+  }
 };
 </script>
 
@@ -27,7 +35,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
 
   /* .topBox {
     position: absolute;
