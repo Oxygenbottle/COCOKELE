@@ -36,7 +36,7 @@ export default {
   text-align: center;
   padding-bottom: 4rpx;
   position: fixed;
-  bottom: 10vh;
+  bottom: 15vh;
   left: 10vw;
   /* display: flex;
   align-items: center;

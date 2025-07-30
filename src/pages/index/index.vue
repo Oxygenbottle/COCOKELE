@@ -1,60 +1,40 @@
 <template>
-  <view class="content">
-    <div class="topBox">
-      <img class="adv_slide" src="../../assets/imgs/topImg.jpg" alt="" />
-    </div>
-    <div>大别墅</div>
-    <button @click="switchTab">切换switch</button>
+  <pageContainer>
+    <div class="navbar" :style="navBarHeight">{{ title }}</div>
     <addList></addList>
-  </view>
+    <tabbar></tabbar>
+  </pageContainer>
 </template>
 <script>
-import addList from '../../components/addList/addList.vue';
+import tabbar from "@/components/tabbar/index.vue";
+import addList from "../../components/addList/addList.vue";
+import pageContainer from "../../components/pageContainer/index.vue";
+import {getNavBarInfo} from '@/utils/getSystemInfo.js'
 
 export default {
-  components: { addList },
+  components: { addList, tabbar, pageContainer },
   data() {
     return {
-      title: 'Hello'
+      navBarInfo: '',
+      navBarHeight: 0,
+      title: "首页",
     };
   },
+  async created() {
+    this.navBarInfo = await getNavBarInfo();
+    console.log('this.navBarInfo.navBarHeight', this.navBarInfo.navBarHeight)
+    this.navBarHeight = `height: ${this.navBarInfo.navBarHeight * 2}rpx`;
+  },
   onLoad() {},
-  methods: {
-    switchTab() {
-      uni.switchTab({
-        url: '/pages/my/index'
-      });
-    }
-  }
+  methods: {},
 };
 </script>
 
 <style>
-.content {
+.navbar {
+  background-color: #ff8d8d;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  /* .topBox {
-    position: absolute;
-    top: 0;
-    left: 0;
-  } */
-}
-
-.adv_slide {
-  width: 100vw;
-  height: 56.25vw;
-}
-
-.top-adv {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
 }
 </style>

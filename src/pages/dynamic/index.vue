@@ -1,9 +1,10 @@
 <template>
-  <div class="main"></div>
+  <view class="content">
+    动态
+  </view>
 </template>
 <script>
 export default {
-  components: {},
   data() {
     return {
       title: "Hello",
@@ -16,6 +17,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>

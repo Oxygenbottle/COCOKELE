@@ -1,28 +1,19 @@
 <script>
-import { getNavBarInfo } from "@/utils/getSystemInfo.js";
+import { getNavBarInfo } from '@/utils/getSystemInfo.js';
 export default {
-  onLaunch: function () {
-    console.log("App Launch");
+  onLaunch: async function () {
+    // console.log('App Launch',import.meta.env.VUE_APP_VERSION);
+    await getNavBarInfo();
   },
   onShow: async function () {
-    console.log("App Show");
-    const {
-      statusBarHeight,
-      navBarHeight,
-      navBarIconDistance,
-    } = await getNavBarInfo();
-    console.log("statusBarHeight", statusBarHeight);
-    console.log("navBarHeight", navBarHeight);
-    console.log("返回按钮等距离和胶囊齐平的高度", navBarIconDistance);
+    console.log('App Show');
   },
   methods: {},
 
   onHide: function () {
-    console.log("App Hide");
-  },
+    console.log('App Hide');
+  }
 };
 </script>
 
-<style>
-/*每个页面公共css */
-</style>
+<style></style>

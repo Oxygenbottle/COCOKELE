@@ -8,7 +8,7 @@
 			}
 		},
 		{
-			"path": "pages/home/home",
+			"path": "pages/home/index",
 			"style": {
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "white"
@@ -18,6 +18,18 @@
 			"path": "pages/my/index",
 			"style": {
 				"navigationBarTitleText": "my"
+			}
+		},
+		{
+			"path": "pages/dynamic/index",
+			"style": {
+				"navigationBarTitleText": "dynamic"
+			}
+		},
+		{
+			"path": "pages/message/index",
+			"style": {
+				"navigationBarTitleText": "message"
 			}
 		}
 	],
