@@ -2,13 +2,11 @@
   <view class="content">
     消息
 
-    <tabbar></tabbar>
   </view>
 </template>
 <script>
-import tabbar from "@/components/tabbar/index.vue";
 export default {
-  components: { tabbar },
+  components: {  },
   data() {
     return {
       title: "Hello",

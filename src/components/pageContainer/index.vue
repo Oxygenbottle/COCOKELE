@@ -1,26 +1,38 @@
 <template>
-  <view class="page-container" :style="containerStyle">
+  <div class="page-container" :style="containerStyle + style">
     <slot></slot>
-  </view>
+  </div>
 </template>
 
 <script>
-import { getNavBarInfo } from '@/utils/getSystemInfo';
+import { getNavBarInfo } from "@/utils/getSystemInfo";
 
 export default {
   name: "PageContainer",
+  props: {
+    style: {
+      type: String,
+      default: "",
+    },
+    router: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       navBarInfo: null,
-      containerStyle: ''
+      containerStyle: "",
     };
   },
   async created() {
     this.navBarInfo = await getNavBarInfo();
+    this.containerStyle = `padding-top: ${
+      this.navBarInfo.statusBarHeight + this.navBarInfo.navBarHeight
+    }rpx; padding-bottom: calc(${this.navBarInfo.safeAreaInsets.bottom}rpx + 20vw);`;
 
-    this.containerStyle = `padding-top: ${this.navBarInfo.statusBarHeight + this.navBarInfo.navBarHeight}rpx; padding-bottom: calc(${this.navBarInfo.safeAreaInsets.bottom}rpx + 20vw);`
-    console.log('页面容器获取到的系统信息:', this.navBarInfo);
-  }
+    console.log("页面容器获取到的系统信息:", this.navBarInfo);
+  },
 };
 </script>
 
@@ -29,6 +41,6 @@ export default {
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
-  background-color: #f5f5f5;
+  // background-color: #fff;
 }
 </style>

@@ -1,40 +1,38 @@
 <template>
-  <pageContainer>
-    <div class="navbar" :style="navBarHeight">{{ title }}</div>
+  <pageContainer :router="router" :style="'background: #000'">
+    <routerView :router="router"></routerView>
     <addList></addList>
-    <tabbar></tabbar>
+    <tabbar @change="changeTab"></tabbar>
   </pageContainer>
 </template>
 <script>
-import tabbar from "@/components/tabbar/index.vue";
-import addList from "../../components/addList/addList.vue";
-import pageContainer from "../../components/pageContainer/index.vue";
-import {getNavBarInfo} from '@/utils/getSystemInfo.js'
+import tabbar from '@/components/tabbar/index.vue';
+import addList from '../../components/addList/addList.vue';
+import pageContainer from '../../components/pageContainer/index.vue';
+import routerView from '../../components/routerView/index.vue';
 
 export default {
-  components: { addList, tabbar, pageContainer },
+  components: { addList, tabbar, pageContainer, routerView },
   data() {
     return {
-      navBarInfo: '',
-      navBarHeight: 0,
-      title: "首页",
+      router: {}
     };
   },
-  async created() {
-    this.navBarInfo = await getNavBarInfo();
-    console.log('this.navBarInfo.navBarHeight', this.navBarInfo.navBarHeight)
-    this.navBarHeight = `height: ${this.navBarInfo.navBarHeight * 2}rpx`;
-  },
+  created() {},
   onLoad() {},
-  methods: {},
+  methods: {
+    changeTab(item) {
+      console.log('changeTab', item);
+      this.router = item;
+    }
+  },
+  onPullDownRefresh() {
+    console.log('refresh');
+    setTimeout(function () {
+      uni.stopPullDownRefresh();
+    }, 1000);
+  }
 };
 </script>
 
-<style>
-.navbar {
-  background-color: #ff8d8d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>
+<style></style>

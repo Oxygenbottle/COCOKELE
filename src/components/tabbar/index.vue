@@ -1,5 +1,5 @@
 <template>
-  <view class="tabbar-container">
+  <view class="tabbar-container" :style="tabbarInfoStyle">
     <view class="tabbar">
       <!-- 左侧tab项 -->
       <view
@@ -17,16 +17,20 @@
 
 <script>
 import { getTabbarInfo } from '@/api/public';
+import { getNavBarInfo } from '@/utils/getSystemInfo.js';
 export default {
   name: 'SafeAreaTabbar',
   data() {
     return {
       safeAreaInsetsBottom: 0,
-      tabbarList: []
+      tabbarList: [],
+      tabbarInfoStyle: '',
     };
   },
-  created() {
+  async created() {
     this.getTabbarInfo();
+    let naviInfo = await getNavBarInfo();
+    this.tabbarInfoStyle = `padding-bottom: ${naviInfo.safeAreaInsets.bottom}rpx`
   },
   computed: {
     // 计算实际安全距离高度
@@ -34,17 +38,17 @@ export default {
   methods: {
     getTabbarInfo() {
       getTabbarInfo().then((res) => {
-        console.log('res', res);
-        let list = res.data;
-        this.tabbarList = list.sort((a,b) => b-a) || [];
-        console.log('tabbarList', this.tabbarList);
+        // console.log('res', res);
+        // let list = res.data;
+        // this.tabbarList = list.sort((a,b) => b-a) || [];
+        // console.log('tabbarList', this.tabbarList);
+        this.tabbarList = res.data;
+        this.changeTab(this.tabbarList[0]);
       });
     },
     changeTab(item) {
-      console.log('changeTab', item.path);
-      uni.navigateTo({
-        url: item.path,
-      });
+      // console.log('tabbar changeTab', item.path);
+      this.$emit('change', item);
     },
   }
 };
@@ -58,7 +62,7 @@ export default {
   left: 0;
   right: 0;
   z-index: 999;
-  padding-bottom: env(safe-area-inset-bottom);
+  // padding-bottom: env(safe-area-inset-bottom);
   background-color: #fff;
 }
 

@@ -38,6 +38,7 @@ export default {
   position: fixed;
   bottom: 15vh;
   left: 10vw;
+  z-index: 1000;
   /* display: flex;
   align-items: center;
   justify-content: center; */
