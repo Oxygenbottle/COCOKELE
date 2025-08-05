@@ -1,50 +1,20 @@
 <template>
   <div>
-    <view class="top-nav">
-      <view class="function-icons">
-        <view class="icon-item">
-          <!-- <image src="/static/icons/sign.png" mode="aspectFit"></image> -->
-          <text>签到福利</text>
-        </view>
-        <view class="icon-item">
-          <!-- <image src="/static/icons/strategy.png" mode="aspectFit"></image> -->
-          <text>攻略合集</text>
-        </view>
-        <view class="icon-item">
-          <!-- <image src="/static/icons/guide.png" mode="aspectFit"></image> -->
-          <text>市民指南</text>
-        </view>
-        <view class="icon-item">
-          <!-- <image src="/static/icons/achievement.png" mode="aspectFit"></image> -->
-          <text>战绩</text>
-        </view>
-        <view class="icon-item">
-          <!-- <image src="/static/icons/cultivate.png" mode="aspectFit"></image> -->
-          <text>养成指南</text>
-        </view>
-        <view class="icon-item">
-          <!-- <image src="/static/icons/story.png" mode="aspectFit"></image> -->
-          <text>情报</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 资讯横幅 -->
-    <view class="news-banner">
-      <text class="news-tag">资讯</text>
-      <text class="news-title">《绝区零》浮波柚叶角色展示 | 鬼使狸差</text>
-      <text class="news-more">全部 ></text>
-    </view>
-
     <!-- 内容选项卡 -->
-    <view class="content-tabs">
-      <view class="tab-item">攻略</view>
-      <view class="tab-item active">发现</view>
-      <view class="tab-item">官方</view>
-      <view class="tab-item">咖啡馆</view>
-      <view class="tab-item">同人图</view>
-      <view class="tab-item">COS</view>
-    </view>
+    <div class="content-tabs">
+      <scroll-view class="scroll-view" scroll-x="true">
+        <view
+          v-for="(tab, index) in tabs"
+          :key="index"
+          class="scroll-view-item uni-bg-red"
+          :class="{'active': activeIndex === index}"
+          @click="handleClickScroll(index)"
+          >{{ tab.name }}</view
+        >
+        <!-- 移动的小蓝条 -->
+        <view class="tab-indicator" :style="indicatorStyle"></view>
+      </scroll-view>
+    </div>
 
     <!-- 内容列表 -->
     <scroll-view class="content-list" scroll-y>
@@ -53,7 +23,9 @@
         <view class="user-info">
           <!-- <image src="/static/avatars/official.png" mode="aspectFit"></image> -->
           <view class="user-details">
-            <view class="user-name">绝区零 <text class="official-tag">官方</text></view>
+            <view class="user-name"
+              >绝区零 <text class="official-tag">官方</text></view
+            >
             <view class="post-time">官方消息 07-15</view>
           </view>
         </view>
@@ -108,68 +80,101 @@
     </scroll-view>
   </div>
 </template>
+
 <script>
-export default {};
-</script>
-<style scoped lang="scss">
-/* 顶部导航 */
-.top-nav {
-  color: $uni-text-color-inverse;
-}
-
-.function-icons {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.icon-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 20%;
-  font-size: $uni-font-size-sm;
-  image {
-    width: $uni-img-size-base;
-    height: $uni-img-size-base;
-    margin-bottom: $uni-spacing-col-sm;
+export default {
+  data() {
+    return {
+      tabs: [
+        { name: 'COS' },
+        { name: '古风' },
+        { name: '谷子' },
+        { name: '棚子' },
+        { name: '出图' },
+        { name: '咖啡馆' },
+        { name: '咖啡馆' },
+        { name: '咖啡馆' }
+      ],
+      activeIndex: 0,
+      currentTabWidth: 0,
+      currentTabLeft: 0
+    };
+  },
+  mounted() {
+    this.handleClickScroll(0);
+  },
+  computed: {
+    indicatorStyle() {
+      // 计算小蓝条的位置和宽度
+      const left = this.currentTabLeft + this.currentTabWidth / 2 - 18; // 左边距
+      return `width:32rpx;left: ${left}px`;
+    }
+  },
+  methods: {
+    handleClickScroll(index) {
+      const queryItem = uni.createSelectorQuery().in(this);
+      queryItem.selectAll('.scroll-view-item').boundingClientRect();
+      let itemLeft = 0;
+      queryItem.exec((res) => {
+        console.log('queryItem res', res);
+        const rect = res[0][index];
+        console.log('query rect', rect);
+        this.currentTabWidth = rect.width;
+        itemLeft = rect.left;
+      });
+      const query = uni.createSelectorQuery().in(this);
+      query.selectAll('.scroll-view').scrollOffset();
+      query.exec((res) => {
+        console.log('scroll left ==>', res[0][0].scrollLeft);
+        let scrollLeft = res[0][0].scrollLeft;
+        this.currentTabLeft = itemLeft + scrollLeft;
+      });
+      this.activeIndex = index;
+    }
   }
-}
+};
+</script>
 
-/* 资讯横幅 */
-.news-banner {
-  background-color: $uni-color-primary;
-  color: white;
-  padding: $uni-spacing-row-base;
-  border-radius: $uni-border-radius-base;
-  margin: $uni-spacing-row-base;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.news-tag {
-  background-color: #fff;
-  color: $uni-color-primary;
-  padding: 2px 5px;
-  border-radius: $uni-border-radius-sm;
-  margin-right: $uni-spacing-row-sm;
-}
-
+<style lang="scss" scoped>
 /* 内容选项卡 */
 .content-tabs {
   display: flex;
-  padding: $uni-spacing-row-base;
-  border-bottom: 1px solid $uni-border-color;
-}
+  padding: 0 $uni-spacing-row-base;
+  background: #fff;
+  border-radius: 30rpx 30rpx 0 0;
+  position: relative;
+  overflow-x: scroll;
 
-.tab-item {
-  flex: 1;
-  text-align: center;
-  padding: $uni-spacing-col-sm 0;
-  &.active {
-    color: $uni-color-primary;
-    border-bottom: 2px solid $uni-color-primary;
+  .scroll-view {
+    border-radius: 30rpx 30rpx 0 0;
+    white-space: nowrap;
+    width: 100%;
+    position: relative;
+    .scroll-view-item {
+      width: auto;
+      padding: 0 30rpx;
+      height: 88rpx;
+      line-height: 88rpx;
+      display: inline-block;
+      text-align: center;
+      font-size: 28rpx;
+      font-weight: 500;
+      background: #fff;
+      color: #d4d4d4;
+      z-index: 1;
+      &.active {
+        color: #000;
+      }
+    }
+    .tab-indicator {
+      position: absolute;
+      bottom: 40rpx;
+      height: 4px;
+      border-radius: 15rpx;
+      background-color: #71aff7;
+      transition: all 0.3s ease;
+      z-index: 0;
+    }
   }
 }
 

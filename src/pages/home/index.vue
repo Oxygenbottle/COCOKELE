@@ -2,20 +2,20 @@
   <div class="main">
     <navbar></navbar>
     <img class="bg" src="../../assets/imgs/index_top_bg.png" />
-    <pageContent></pageContent>
+    <pageContainer></pageContainer>
   </div>
 </template>
 
 <script>
 import { navbar } from "./components/navbar.vue";
-import { pageContent } from "./components/pageContent.vue";
+import { pageContainer } from "./components/pageContainer.vue";
 export default {
-  components: { navbar, pageContent },
+  components: { navbar, pageContainer },
   data() {
     return {
       title: "首页",
       inited: false,
-      // 可以在这里添加模拟数据
+      // 可以在这里添加模拟数据  
       posts: [
         // 帖子数据
       ],
@@ -26,6 +26,7 @@ export default {
   methods: {
     changeTab(index) {
       console.log("index", index);
+      wx.getWindowInfo()
     },
   },
 };

@@ -1,7 +1,6 @@
 <template>
   <view class="tabbar-container" :style="tabbarInfoStyle">
     <view class="tabbar">
-      <!-- 左侧tab项 -->
       <view
         class="tabbar-item"
         v-for="(item, index) in tabbarList"
@@ -11,7 +10,6 @@
         {{ item.name }}
       </view>
     </view>
-    <!-- 底部安全距离占位 -->
   </view>
 </template>
 
