@@ -9,37 +9,37 @@
 </template>
 
 <script>
-import {getNavBarInfo} from '@/utils/getSystemInfo.js';
-import Navbar from "@/components/navbar/index.vue";
-import Home from "@/pages/home/index.vue";
-import Message from "@/pages/message/index.vue";
-import My from "@/pages/my/index.vue";
-import Dynamic from "@/pages/dynamic/index.vue";
+import { getNavBarInfo } from '@/utils/getSystemInfo.js';
+import Navbar from '@/components/navbar/index.vue';
+import Home from '@/pages/home/index.vue';
+import Message from '@/pages/message/index.vue';
+import My from '@/pages/my/index.vue';
+import Dynamic from '@/pages/dynamic/index.vue';
 
 export default {
-  name: "RouterView",
+  name: 'RouterView',
   components: { Navbar, Home, Message, My, Dynamic },
   props: {
     router: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   data() {
     return {
       tabbarList: [],
-      title: "首页",
-      routerViewStyle:{},
+      title: '首页',
+      routerViewStyle: {}
     };
   },
   async created() {
     let navBarInfo = await getNavBarInfo();
-    this.routerViewStyle = `height: calc(100vh - ${navBarInfo.statusBarHeight}rpx - ${navBarInfo.navBarHeight}rpx - ${navBarInfo.safeAreaInsets.bottom}rpx - 20vw)`
+    this.routerViewStyle = `height: calc(100vh - ${navBarInfo.statusBarHeight}rpx - ${navBarInfo.navBarHeight}rpx - ${navBarInfo.safeAreaInsets.bottom}rpx - 20vw)`;
   },
   computed: {
     // 计算实际安全距离高度
   },
-  methods: {},
+  methods: {}
 };
 </script>
 
@@ -47,5 +47,8 @@ export default {
 .router-view {
   background-color: #27705732;
   overflow-y: scroll;
+  // 隐藏滚动条
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>

@@ -1,14 +1,19 @@
 <template>
-  <div>
+  <div class="content-container">
     <!-- 内容选项卡 -->
     <div class="content-tabs">
-      <scroll-view class="scroll-view" scroll-x="true">
+      <scroll-view
+        class="scroll-view"
+        scroll-x="true"
+        scroll-with-animation
+        :scroll-left="scrollLeft"
+      >
         <view
           v-for="(tab, index) in tabs"
           :key="index"
-          class="scroll-view-item uni-bg-red"
-          :class="{'active': activeIndex === index}"
-          @click="handleClickScroll(index)"
+          class="tab-item"
+          :class="{ active: activeIndex === index }"
+          @click="handleClickTab(index)"
           >{{ tab.name }}</view
         >
         <!-- 移动的小蓝条 -->
@@ -16,141 +21,193 @@
       </scroll-view>
     </div>
 
-    <!-- 内容列表 -->
-    <scroll-view class="content-list" scroll-y>
-      <!-- 官方消息 -->
-      <view class="post-item">
-        <view class="user-info">
-          <!-- <image src="/static/avatars/official.png" mode="aspectFit"></image> -->
-          <view class="user-details">
-            <view class="user-name"
-              >绝区零 <text class="official-tag">官方</text></view
-            >
-            <view class="post-time">官方消息 07-15</view>
-          </view>
-        </view>
-        <view class="post-content">
-          <text class="post-title">《绝区零》浮波柚叶 EP | 乐园梦游计</text>
-          <text class="post-text"
-            >「细心编写游历....(●´∀｀●) 不对 是我哟」「上当了吧!」...</text
-          >
-          <view class="post-media">
-            <!-- <video
-              src="https://example.com/video.mp4"
-              poster="/static/images/video-cover.jpg"
-              controls
-            ></video> -->
-            <view class="video-duration">03:20</view>
-          </view>
-          <view class="post-stats">
-            <text class="play-count">播放十万</text>
-            <text class="comment-count">评论过千</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 用户帖子 -->
-      <view class="post-item">
-        <view class="user-info">
-          <!-- <image src="/static/avatars/user1.png" mode="aspectFit"></image> -->
-          <view class="user-details">
-            <view class="user-name"
-              >可莉的嘟嘟可1号 <text class="verified-tag">✓</text></view
-            >
-            <view class="post-time">07-18</view>
-          </view>
-        </view>
-        <view class="post-content">
-          <text class="post-text"
-            >枣~尚~蚝~
-            起的这么早，大家就交换UID来加个好友吧，欢迎发到评论区哦~小萌新有问题也可以提问~大家不要光点赞啊，评论评论吧~怎么突然</text
-          >
-        </view>
-        <view class="post-actions">
-          <view class="action-item">
-            <text>💬</text>
-            <text>451</text>
-          </view>
-          <view class="action-item">
-            <text>👍</text>
-            <text>3928</text>
-          </view>
-        </view>
-      </view>
-    </scroll-view>
+    <swiper
+      style="height: 100vh"
+      class="swiper"
+      :indicator-dots="false"
+      :autoplay="false"
+      :interval="false"
+      :duration="300"
+      :current="activeIndex"
+      :style="'background:#fff'"
+      @animationfinish="(e) => swiperChangeEnd(e)"
+    >
+      <swiper-item class="swiper-item" v-for="(tab, index) in tabs" :key="index">
+        <post-item v-for="post in postList" :key="post.id" :post="post"></post-item>
+      </swiper-item>
+    </swiper>
   </div>
 </template>
 
 <script>
+// 导入模拟数据和组件
+import mockData from "../mock.js";
+import postItem from "./postItem.vue";
+
 export default {
+  components: {
+    postItem,
+  },
   data() {
     return {
       tabs: [
-        { name: 'COS' },
-        { name: '古风' },
-        { name: '谷子' },
-        { name: '棚子' },
-        { name: '出图' },
-        { name: '咖啡馆' },
-        { name: '咖啡馆' },
-        { name: '咖啡馆' }
+        { name: "COS" },
+        { name: "古风" },
+        { name: "谷子" },
+        { name: "棚子" },
+        { name: "出图" },
+        { name: "咖啡馆" },
+        { name: "分享" },
+        { name: "讨论" },
       ],
       activeIndex: 0,
       currentTabWidth: 0,
-      currentTabLeft: 0
+      currentTabLeft: 0,
+      tabPositions: [], // 缓存所有tab的位置信息
+      isScrolling: false, // 标记是否正在滚动
+      systemInfo: {}, // 系统信息
+      scrollLeft: 0, // 用于控制scroll-view的滚动位置
+      postList: mockData.postData, // 使用模拟数据
     };
   },
   mounted() {
-    this.handleClickScroll(0);
+    // 获取系统信息
+    this.getSystemInfo();
+    // 初始化时缓存所有tab位置
+    this.cacheTabPositions();
   },
   computed: {
     indicatorStyle() {
-      // 计算小蓝条的位置和宽度
-      const left = this.currentTabLeft + this.currentTabWidth / 2 - 18; // 左边距
-      return `width:32rpx;left: ${left}px`;
-    }
+      const left = this.currentTabLeft + this.currentTabWidth / 2 - 24;
+      return `left: ${left}px;`;
+    },
+    // 视口中心位置
+    viewportCenter() {
+      return this.systemInfo.windowWidth / 2 || 300;
+    },
   },
   methods: {
-    handleClickScroll(index) {
-      const queryItem = uni.createSelectorQuery().in(this);
-      queryItem.selectAll('.scroll-view-item').boundingClientRect();
-      let itemLeft = 0;
-      queryItem.exec((res) => {
-        console.log('queryItem res', res);
-        const rect = res[0][index];
-        console.log('query rect', rect);
-        this.currentTabWidth = rect.width;
-        itemLeft = rect.left;
-      });
+    // 获取系统信息
+    getSystemInfo() {
+      try {
+        const res = uni.getSystemInfoSync();
+        this.systemInfo = res;
+      } catch (e) {
+        console.error("获取系统信息失败", e);
+        // 提供默认值
+        this.systemInfo = { windowWidth: 375 };
+      }
+    },
+
+    // 缓存所有tab的位置信息
+    cacheTabPositions() {
       const query = uni.createSelectorQuery().in(this);
-      query.selectAll('.scroll-view').scrollOffset();
+      query.selectAll(".tab-item").boundingClientRect();
       query.exec((res) => {
-        console.log('scroll left ==>', res[0][0].scrollLeft);
-        let scrollLeft = res[0][0].scrollLeft;
-        this.currentTabLeft = itemLeft + scrollLeft;
+        if (res && res[0]) {
+          this.tabPositions = res[0];
+          this.updateTabIndicator(0);
+        } else {
+          // 重试机制
+          setTimeout(() => {
+            this.cacheTabPositions();
+          }, 100);
+        }
       });
+    },
+
+    // 更新指示器位置
+    updateTabIndicator(index) {
+      if (this.tabPositions[index]) {
+        console.log("index ======= >", index);
+        const rect = this.tabPositions[index];
+        this.currentTabWidth = rect.width;
+        this.currentTabLeft = rect.left;
+      }
+    },
+
+    // 处理tab点击
+    handleClickTab(index) {
+      if (this.isScrolling) return;
+
       this.activeIndex = index;
-    }
-  }
+      this.updateTabIndicator(index);
+
+      // 滚动到选中的tab（如果需要）
+      this.scrollToTab(index);
+    },
+
+    // 滚动到指定tab
+    scrollToTab(index) {
+      if (!this.tabPositions[index]) return;
+
+      const rect = this.tabPositions[index];
+      const tabCenter = rect.left + rect.width / 2;
+      const newScrollLeft = tabCenter - this.viewportCenter;
+
+      // 使用数据绑定方式滚动scroll-view
+      this.isScrolling = true;
+      this.scrollLeft = newScrollLeft;
+
+      // 滚动动画结束后重置标记
+      setTimeout(() => {
+        this.isScrolling = false;
+      }, 300);
+    },
+
+    // swiper滚动结束
+    swiperChangeEnd(e) {
+      this.activeIndex = e.detail.current;
+      this.updateTabIndicator(e.detail.current);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+/* 内容容器 */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.swiper {
+  height: 100%;
+}
+.swiper-item {
+  padding: 0 16rpx;
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: scroll;
+}
+
 /* 内容选项卡 */
 .content-tabs {
   display: flex;
-  padding: 0 $uni-spacing-row-base;
+  padding: 0 30rpx;
   background: #fff;
   border-radius: 30rpx 30rpx 0 0;
-  position: relative;
   overflow-x: scroll;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  // 隐藏滚动条
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .scroll-view {
     border-radius: 30rpx 30rpx 0 0;
     white-space: nowrap;
     width: 100%;
     position: relative;
-    .scroll-view-item {
+
+    .tab-item {
       width: auto;
       padding: 0 30rpx;
       height: 88rpx;
@@ -161,153 +218,167 @@ export default {
       font-weight: 500;
       background: #fff;
       color: #d4d4d4;
-      z-index: 1;
+      z-index: 10;
+      position: relative;
+      box-sizing: border-box;
+
       &.active {
         color: #000;
       }
     }
+
     .tab-indicator {
-      position: absolute;
-      bottom: 40rpx;
+      width: 32rpx;
       height: 4px;
+      background: #30c4ff;
       border-radius: 15rpx;
-      background-color: #71aff7;
       transition: all 0.3s ease;
-      z-index: 0;
+      position: absolute;
+      top: 80rpx;
+      z-index: 10;
     }
   }
 }
 
 /* 内容列表 */
 .content-list {
-  height: calc(100vh - 400px);
-  background-color: $uni-bg-color;
+  height: 100%;
+  flex: 1;
+  width: 100%;
+  padding: 20rpx 30rpx;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
 }
 
+/* 帖子样式 */
 .post-item {
-  padding: $uni-spacing-row-base;
-  border-bottom: 1px solid $uni-border-color;
-}
+  width: 100%;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
 
-.user-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: $uni-spacing-col-base;
-  image {
-    width: $uni-img-size-lg;
-    height: $uni-img-size-lg;
-    border-radius: $uni-border-radius-circle;
-    margin-right: $uni-spacing-row-sm;
-  }
-}
-
-.official-tag {
-  background-color: $uni-color-primary;
-  color: white;
-  font-size: 10px;
-  padding: 0 3px;
-  border-radius: 2px;
-  margin-left: 5px;
-}
-
-.post-title {
-  font-weight: bold;
-  font-size: $uni-font-size-base;
-  margin-bottom: $uni-spacing-col-sm;
-}
-
-.post-media {
-  position: relative;
-  margin: $uni-spacing-col-base 0;
-  video {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: $uni-border-radius-base;
-  }
-  .video-duration {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 2px 5px;
-    border-radius: $uni-border-radius-sm;
-    font-size: $uni-font-size-sm;
-  }
-}
-
-.post-stats {
-  display: flex;
-  color: $uni-text-color-grey;
-  font-size: $uni-font-size-sm;
-}
-
-.post-actions {
-  display: flex;
-  justify-content: space-around;
-  margin-top: $uni-spacing-col-base;
-  .action-item {
+  .user-info {
     display: flex;
     align-items: center;
-    color: $uni-text-color-grey;
-    text {
-      margin-left: 5px;
+    margin-bottom: 20rpx;
+
+    image {
+      width: 70rpx;
+      height: 70rpx;
+      border-radius: 50%;
+      margin-right: 20rpx;
+    }
+
+    .user-details {
+      flex: 1;
+
+      .user-name {
+        font-size: 28rpx;
+        font-weight: 500;
+        color: #333;
+
+        .official-tag {
+          display: inline-block;
+          margin-left: 8rpx;
+          padding: 0 10rpx;
+          height: 24rpx;
+          line-height: 24rpx;
+          background-color: #71aff7;
+          color: #fff;
+          font-size: 20rpx;
+          border-radius: 12rpx;
+        }
+
+        .verified-tag {
+          color: #71aff7;
+          margin-left: 8rpx;
+        }
+      }
+
+      .post-time {
+        font-size: 24rpx;
+        color: #999;
+        margin-top: 6rpx;
+      }
     }
   }
-}
 
-/* 底部导航 */
-.bottom-nav {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background-color: white;
-  border-top: 1px solid $uni-border-color;
-}
+  .post-content {
+    .post-title {
+      font-size: 30rpx;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 16rpx;
+      display: block;
+    }
 
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  height: 100%;
-  &.active {
-    color: $uni-color-primary;
+    .post-text {
+      font-size: 28rpx;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 20rpx;
+      display: block;
+    }
+
+    .post-media {
+      width: 100%;
+      height: 400rpx;
+      position: relative;
+      background-color: #f0f0f0;
+      border-radius: 16rpx;
+      overflow: hidden;
+
+      .video-cover {
+        width: 100%;
+        height: 100%;
+      }
+
+      .video-duration {
+        position: absolute;
+        bottom: 10rpx;
+        right: 10rpx;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        font-size: 24rpx;
+        padding: 4rpx 10rpx;
+        border-radius: 16rpx;
+      }
+    }
+
+    .post-stats {
+      display: flex;
+      margin-top: 16rpx;
+
+      .play-count,
+      .comment-count {
+        font-size: 24rpx;
+        color: #999;
+        margin-right: 24rpx;
+      }
+    }
   }
-}
 
-.add-btn {
-  width: $uni-img-size-lg;
-  height: $uni-img-size-lg;
-  border-radius: $uni-border-radius-circle;
-  background-color: $uni-color-primary;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: -20px;
-  font-size: $uni-font-size-lg;
-}
+  .post-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20rpx;
+    padding-top: 20rpx;
+    border-top: 1rpx solid #f0f0f0;
 
-.msg-badge {
-  position: absolute;
-  top: 0;
-  right: 30%;
-  background-color: $uni-color-error;
-  color: white;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 24rpx;
+      color: #999;
+
+      text:first-child {
+        font-size: 40rpx;
+        margin-bottom: 6rpx;
+      }
+    }
+  }
 }
 </style>

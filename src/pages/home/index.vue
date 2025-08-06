@@ -2,33 +2,33 @@
   <div class="main">
     <navbar></navbar>
     <img class="bg" src="../../assets/imgs/index_top_bg.png" />
+
     <pageContainer></pageContainer>
   </div>
 </template>
 
 <script>
-import { navbar } from "./components/navbar.vue";
-import { pageContainer } from "./components/pageContainer.vue";
+import { navbar } from './components/navbar.vue';
+import { pageContainer } from './components/pageContainer.vue';
 export default {
   components: { navbar, pageContainer },
   data() {
     return {
-      title: "首页",
-      inited: false,
-      // 可以在这里添加模拟数据  
-      posts: [
-        // 帖子数据
+      navList: [
+        { id: 0, name: '桃乐丝' },
+        { id: 1, name: '大橘公馆' },
+        { id: 2, name: '今菲昔比' },
+        { id: 3, name: 'shellter' },
+        { id: 4, name: '雪华' },
+        { id: 5, name: '猫罗万象' }
       ],
-      currentIndex: 0,
+      currentIndex: 0
     };
   },
   onLoad() {},
   methods: {
-    changeTab(index) {
-      console.log("index", index);
-      wx.getWindowInfo()
-    },
-  },
+
+  }
 };
 </script>
 
@@ -38,6 +38,9 @@ export default {
   // background-color: $uni-bg-color;
   position: relative;
   z-index: 1;
+  // 隐藏滚动条
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   .bg {
     width: 100vw;
     // height: 100vh;
