@@ -158,7 +158,12 @@ export default {
     // swiper滚动结束
     swiperChangeEnd(e) {
       this.activeIndex = e.detail.current;
-      this.updateTabIndicator(e.detail.current);
+      // 重新缓存tab位置信息
+      this.cacheTabPositions();
+      // 延迟更新指示器，确保位置信息已更新
+      setTimeout(() => {
+        this.updateTabIndicator(e.detail.current);
+      }, 50);
     },
   },
 };

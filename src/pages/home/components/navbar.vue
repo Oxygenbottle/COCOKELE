@@ -5,8 +5,8 @@
         v-for="(item, index) in navList"
         :key="item.id"
         class="game-tab"
-        :class="{ active: pickedTab === index }"
-        @click="pickedTab = index"
+        :class="{ active: currentIndex === index }"
+        @click="handleTabClick(index)"
       >
         {{ item.name }}
       </div>
@@ -19,18 +19,30 @@
 import { getNavBarInfo } from "@/utils/getSystemInfo.js";
 export default {
   name: "SafeAreaTabbar",
+  props: {
+    navList: {
+      type: Array,
+      default: () => [],
+    },
+    currentIndex: {
+      type: Number,
+      default: 0,
+    },
+    changeTab: {
+      type: Function,
+      default: () => {},
+    },
+  },
+  watch: {
+    currentIndex(newVal, oldVal) {
+      console.log('currentIndex', newVal, oldVal);
+      this.pickedTab = newVal;
+    },
+  },
   data() {
     return {
       navBarStyle: 0,
       pickedTab: 0,
-      navList: [
-        { id: 0, name: "桃乐丝" },
-        { id: 1, name: "大橘公馆" },
-        { id: 2, name: "今菲昔比" },
-        { id: 3, name: "shellter" },
-        { id: 4, name: "雪华" },
-        { id: 5, name: "猫罗万象" },
-      ],
     };
   },
   async created() {
@@ -45,12 +57,11 @@ export default {
     getTabbarInfo() {
       getTabbarInfo().then((res) => {
         this.tabbarList = res.data;
-        this.changeTab(this.tabbarList[0]);
+        this.handleTabClick(0);
       });
     },
-    changeTab(item) {
-      // console.log('tabbar changeTab', item.path);
-      this.$emit("change", item);
+    handleTabClick(index) {
+      this.$emit('changeTab', index);
     },
   },
 };

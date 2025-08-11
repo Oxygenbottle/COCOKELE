@@ -5,34 +5,35 @@
 </template>
 
 <script>
-import { getNavBarInfo } from "@/utils/getSystemInfo";
+import { getNavBarInfo } from '@/utils/getSystemInfo';
 
 export default {
-  name: "PageContainer",
+  name: 'PageContainer',
   props: {
     style: {
       type: String,
-      default: "",
+      default: ''
     },
     router: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   data() {
     return {
       navBarInfo: null,
-      containerStyle: "",
+      containerStyle: ''
     };
   },
   async created() {
     this.navBarInfo = await getNavBarInfo();
-    this.containerStyle = `padding-top: ${
-      this.navBarInfo.statusBarHeight + this.navBarInfo.navBarHeight
-    }rpx; padding-bottom: calc(${this.navBarInfo.safeAreaInsets.bottom}rpx + 20vw);`;
+    // this.containerStyle = `padding-top: ${
+    //   this.navBarInfo.statusBarHeight + this.navBarInfo.navBarHeight
+    // }rpx; `;
+    this.containerStyle += `padding-bottom: calc(${this.navBarInfo.safeAreaInsets.bottom}rpx + 20vw);`;
 
-    console.log("页面容器获取到的系统信息:", this.navBarInfo);
-  },
+    console.log('页面容器获取到的系统信息:', this.navBarInfo);
+  }
 };
 </script>
 

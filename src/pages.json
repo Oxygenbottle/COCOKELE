@@ -5,7 +5,7 @@
       "style": {
         "navigationStyle": "custom",
         "navigationBarTextStyle": "white",
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": false
       }
     },
     {
@@ -47,7 +47,6 @@
       },
       {
         "pagePath": "pages/my/index",
-
         "text": "接口"
       }
     ]
