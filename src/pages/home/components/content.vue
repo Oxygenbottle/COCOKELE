@@ -48,6 +48,12 @@ export default {
   components: {
     postItem,
   },
+  props: {
+    outerSwiperIndex: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       tabs: [
@@ -68,6 +74,7 @@ export default {
       systemInfo: {}, // 系统信息
       scrollLeft: 0, // 用于控制scroll-view的滚动位置
       postList: mockData.postData, // 使用模拟数据
+      _outerSwiperIndex: 0,
     };
   },
   mounted() {
@@ -78,13 +85,24 @@ export default {
   },
   computed: {
     indicatorStyle() {
-      const left = this.currentTabLeft + this.currentTabWidth / 2 - 24;
+      const _pageWidth = this.systemInfo.windowWidth * this._outerSwiperIndex;
+      const left = this.currentTabLeft + this.currentTabWidth / 2 - 24 - _pageWidth;
       return `left: ${left}px;`;
     },
     // 视口中心位置
     viewportCenter() {
       return this.systemInfo.windowWidth / 2 || 300;
     },
+  },
+  watch: {
+    outerSwiperIndex: {
+      handler(newVal, oldVal) {
+        console.log('获取外层swiper的索引 ======= >', newVal);
+        // this.updateTabIndicator(0);
+        this._outerSwiperIndex = newVal;
+      },
+      immediate: true
+    }
   },
   methods: {
     // 获取系统信息
@@ -143,7 +161,7 @@ export default {
 
       const rect = this.tabPositions[index];
       const tabCenter = rect.left + rect.width / 2;
-      const newScrollLeft = tabCenter - this.viewportCenter;
+      const newScrollLeft = tabCenter - this.viewportCenter - this.systemInfo.windowWidth * this._outerSwiperIndex;
 
       // 使用数据绑定方式滚动scroll-view
       this.isScrolling = true;
@@ -159,11 +177,11 @@ export default {
     swiperChangeEnd(e) {
       this.activeIndex = e.detail.current;
       // 重新缓存tab位置信息
-      this.cacheTabPositions();
+      // this.cacheTabPositions();
       // 延迟更新指示器，确保位置信息已更新
       setTimeout(() => {
         this.updateTabIndicator(e.detail.current);
-      }, 50);
+      }, 0);
     },
   },
 };

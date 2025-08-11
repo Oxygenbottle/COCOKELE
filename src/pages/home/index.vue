@@ -22,7 +22,7 @@
           :style="{height: `calc(${topPadding}rpx + ${navBarHeight}rpx)`}"
         ></div>
         <img class="bg" :style="imgStyle" :src="item.topBg" />
-        <pageContainer></pageContainer>
+        <pageContainer :outerSwiperIndex="index"></pageContainer>
       </swiper-item>
     </swiper>
   </div>
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     swiperChangeEnd(e) {
-      console.log('swiperChangeEnd ====== >', e);
+      // console.log('swiperChangeEnd ====== >', e);
       this.currentIndex = e.detail.current;
     },
     changeTab(index) {
