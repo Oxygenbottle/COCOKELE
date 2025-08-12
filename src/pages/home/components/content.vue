@@ -8,16 +8,16 @@
         scroll-with-animation
         :scroll-left="scrollLeft"
       >
-        <view
+        <div
           v-for="(tab, index) in tabs"
           :key="index"
           class="tab-item"
           :class="{ active: activeIndex === index }"
           @click="handleClickTab(index)"
-          >{{ tab.name }}</view
+          >{{ tab.name }}</div
         >
         <!-- 移动的小蓝条 -->
-        <view class="tab-indicator" :style="indicatorStyle"></view>
+        <div class="tab-indicator" :style="indicatorStyle"></div>
       </scroll-view>
     </div>
 
@@ -201,7 +201,7 @@ export default {
 .swiper-item {
   padding: 0 16rpx;
   box-sizing: border-box;
-  height: 100%;
+  // height: 100%;
   overflow-y: scroll;
 }
 

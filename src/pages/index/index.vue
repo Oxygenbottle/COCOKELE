@@ -1,5 +1,5 @@
 <template>
-  <pageContainer :router="router" :style="'background: #000;'">
+  <pageContainer :router="router" :style="'background: #fff;'">
     <routerView :router="router"></routerView>
     <addList></addList>
     <tabbar @change="changeTab"></tabbar>
@@ -22,12 +22,10 @@ export default {
   onLoad() {},
   methods: {
     changeTab(item) {
-      console.log('changeTab', item);
       this.router = item;
     }
   },
   onPullDownRefresh() {
-    console.log('refresh');
     setTimeout(function () {
       uni.stopPullDownRefresh();
     }, 1000);

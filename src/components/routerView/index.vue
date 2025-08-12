@@ -1,10 +1,10 @@
 <template>
-  <div class="router-view" :style="routerViewStyle">
+  <div class="router-view" :style="{ opacity: opacity }">
     <Navbar v-if="router.type === 'page'">{{ router.name }}</Navbar>
-    <Home v-if="router.path === '/pages/profile/index'"></Home>
-    <Message v-else-if="router.path === '/pages/message/index'"></Message>
-    <My v-else-if="router.path === '/pages/home/index'"></My>
-    <Dynamic v-else></Dynamic>
+    <Home v-if="currentPath === '/pages/profile/index'"></Home>
+    <Message v-else-if="currentPath === '/pages/message/index'"></Message>
+    <My v-else-if="currentPath === '/pages/home/index'"></My>
+    <Dynamic v-else-if="currentPath === '/pages/dynamic/index'"></Dynamic>
   </div>
 </template>
 
@@ -25,19 +25,36 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    router: {
+      handler(newVal, oldVal) {
+        console.log('路由变化 ======== >', newVal, oldVal);
+        // 开始淡出
+        this.opacity = 0;
+        this.currentPath = ''
+        // 等待淡出完成后，切换组件并开始淡入
+        setTimeout(() => {
+          this.currentPath = newVal.path;
+          this.opacity = 1;
+        }, 300); // 这里的时间需要和CSS过渡时间一致
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   data() {
     return {
       tabbarList: [],
       title: '首页',
-      routerViewStyle: {}
+      routerViewStyle: {},
+
+      opacity: 0, // 添加透明度控制
+      currentPath: '',
     };
   },
   async created() {
     let navBarInfo = await getNavBarInfo();
-    this.routerViewStyle = `height: calc(100vh - ${navBarInfo.statusBarHeight}rpx - ${navBarInfo.navBarHeight}rpx - ${navBarInfo.safeAreaInsets.bottom}rpx - 20vw)`;
-  },
-  computed: {
-    // 计算实际安全距离高度
+    // this.routerViewStyle = `height: calc(100vh - ${navBarInfo.statusBarHeight}rpx - ${navBarInfo.navBarHeight}rpx - ${navBarInfo.safeAreaInsets.bottom}rpx - 20vw)`;
   },
   methods: {}
 };
@@ -50,5 +67,6 @@ export default {
   // 隐藏滚动条
   -ms-overflow-style: none;
   scrollbar-width: none;
+  transition: opacity 0.3s ease; // 添加过渡效果
 }
 </style>

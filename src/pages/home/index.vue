@@ -2,7 +2,7 @@
   <div class="main">
     <navbar
       class="navbar"
-      :style="{top: `${topPadding}rpx`}"
+      :style="{ top: `${topPadding}rpx` }"
       :navList="navList"
       :currentIndex="currentIndex"
       @changeTab="changeTab"
@@ -19,7 +19,7 @@
     >
       <swiper-item v-for="(item, index) in navList" :key="index">
         <div
-          :style="{height: `calc(${topPadding}rpx + ${navBarHeight}rpx)`}"
+          :style="{ height: `calc(${topPadding}rpx + ${navBarHeight}rpx)` }"
         ></div>
         <img class="bg" :style="imgStyle" :src="item.topBg" />
         <pageContainer :outerSwiperIndex="index"></pageContainer>
@@ -59,25 +59,26 @@ export default {
           id: 3,
           name: 'shellter',
           topBg:
-            'https://oxy-1258558723.cos.ap-shanghai.myqcloud.com/oxy_mini/img/doro_bg.png'
+            'https://oxy-1258558723.cos.ap-shanghai.myqcloud.com/oxy_mini/img/shelter_bg.png'
         },
         {
           id: 4,
           name: '雪华',
           topBg:
-            'https://oxy-1258558723.cos.ap-shanghai.myqcloud.com/oxy_mini/img/doro_bg.png'
+            'https://oxy-1258558723.cos.ap-shanghai.myqcloud.com/oxy_mini/img/xuehua_bg.png'
         },
         {
           id: 5,
           name: '猫罗万象',
           topBg:
-            'https://oxy-1258558723.cos.ap-shanghai.myqcloud.com/oxy_mini/img/doro_bg.png'
+            'https://oxy-1258558723.cos.ap-shanghai.myqcloud.com/oxy_mini/img/maoluo_bg.png'
         }
       ],
       currentIndex: 0,
       topPadding: 0,
       navBarHeight: 0,
-      imgStyle: ''
+      imgStyle: '',
+      systemInfo: {}
     };
   },
   async created() {
@@ -86,8 +87,20 @@ export default {
       this.navBarInfo.statusBarHeight + this.navBarInfo.navBarHeight;
     this.navBarHeight = this.navBarInfo.navBarHeight;
     this.imgStyle = `margin-top: -${this.topPadding}rpx`;
+    this.getSystemInfo();
   },
   methods: {
+    // 获取系统信息
+    getSystemInfo() {
+      try {
+        const res = uni.getSystemInfoSync();
+        this.systemInfo = res;
+      } catch (e) {
+        console.error('获取系统信息失败', e);
+        // 提供默认值
+        this.systemInfo = { windowWidth: 375 };
+      }
+    },
     swiperChangeEnd(e) {
       // console.log('swiperChangeEnd ====== >', e);
       this.currentIndex = e.detail.current;
@@ -115,7 +128,7 @@ export default {
     z-index: 10000;
   }
   .swiper {
-    border: 1px solid rebeccapurple;
+    // border: 1px solid rebeccapurple;
   }
   .bg {
     width: 100vw;
