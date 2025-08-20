@@ -180,6 +180,7 @@ export default {
       // this.cacheTabPositions();
       // 延迟更新指示器，确保位置信息已更新
       setTimeout(() => {
+        this.scrollToTab(e.detail.current);
         this.updateTabIndicator(e.detail.current);
       }, 0);
     },

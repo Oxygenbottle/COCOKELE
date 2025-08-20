@@ -23,25 +23,25 @@
 </template>
 
 <script>
-import { getNavBarInfo } from "@/utils/getSystemInfo.js";
+import { getNavBarInfo } from '@/utils/getSystemInfo.js';
 export default {
-  name: "SafeAreaTabbar",
+  name: 'SafeAreaTabbar',
   props: {
     navList: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     currentIndex: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   watch: {
     currentIndex(newVal) {
       this.pickedTab = newVal;
       // 当currentIndex变化时，滚动到选中的tab
       this.scrollToTab(newVal);
-    },
+    }
   },
   data() {
     return {
@@ -50,15 +50,16 @@ export default {
       scrollLeft: 0,
       tabPositions: [], // 缓存所有tab的位置信息
       viewportCenter: 0, // 视口中心位置
-      systemInfo: {}, // 系统信息
+      systemInfo: {} // 系统信息
     };
   },
   async created() {
     // 获取系统信息
     this.getSystemInfo();
     let navBarInfo = await getNavBarInfo();
-    this.navBarStyle = `height: ${navBarInfo.navBarHeight}px;`,
-    this.navBarStyle += `width: calc(100vw - ${navBarInfo.menuButton.width}px - 40px)`
+    console.log('navBarIn ====== > ', navBarInfo);
+    (this.navBarStyle = `height: ${navBarInfo.navBarHeight}px;`),
+      (this.navBarStyle += `width: calc(100vw - ${navBarInfo.menuButton.width || 75}px - 40px)`);
   },
   mounted() {
     // 初始化时缓存所有tab位置
@@ -74,9 +75,10 @@ export default {
       try {
         const res = uni.getSystemInfoSync();
         this.systemInfo = res;
-        this.viewportCenter = res.windowWidth / 2 || 300;
+        this.viewportCenter =
+          (res.windowWidth - res.menuButton.width - 40) / 2 || 300;
       } catch (e) {
-        console.error("获取系统信息失败", e);
+        console.error('获取系统信息失败', e);
         // 提供默认值
         this.systemInfo = { windowWidth: 375 };
         this.viewportCenter = 187.5;
@@ -86,7 +88,7 @@ export default {
     // 缓存所有tab的位置信息
     cacheTabPositions() {
       const query = uni.createSelectorQuery().in(this);
-      query.selectAll(".game-tab").boundingClientRect();
+      query.selectAll('.game-tab').boundingClientRect();
       query.exec((res) => {
         if (res && res[0]) {
           this.tabPositions = res[0];
@@ -122,8 +124,8 @@ export default {
       this.$emit('changeTab', index);
       // 点击时滚动到选中的tab
       this.scrollToTab(index);
-    },
-  },
+    }
+  }
 };
 </script>
 

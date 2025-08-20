@@ -1,11 +1,19 @@
 <template>
   <view class="top-nav">
-    <scroll-view
-      class="menu-scroll"
-      scroll-x="true"
-      scroll-with-animation
-    >
+    <scroll-view class="menu-scroll" scroll-x="true" scroll-with-animation>
       <view class="menu-icons">
+        <view class="icon-item">
+          <img src="../../../assets/icons/menus/zhu.png" />
+          <text>拼好棚</text>
+        </view>
+        <view class="icon-item">
+          <img src="../../../assets/icons/menus/guanmucong.png" />
+          <text>拼好摄</text>
+        </view>
+        <view class="icon-item">
+          <img src="../../../assets/icons/menus/muzhuang.png" />
+          <text>拼好团</text>
+        </view>
         <view class="icon-item">
           <img src="../../../assets/icons/menus/yinxing.png" />
           <text>棚费咨询</text>
@@ -25,18 +33,6 @@
         <view class="icon-item">
           <img src="../../../assets/icons/menus/juhua.png" />
           <text>会员中心</text>
-        </view>
-        <view class="icon-item">
-          <img src="../../../assets/icons/menus/muzhuang.png" />
-          <text>拼好棚</text>
-        </view>
-        <view class="icon-item">
-          <img src="../../../assets/icons/menus/muzhuang.png" />
-          <text>拼好摄</text>
-        </view>
-        <view class="icon-item">
-          <img src="../../../assets/icons/menus/muzhuang.png" />
-          <text>拼好团</text>
         </view>
       </view>
     </scroll-view>
@@ -67,8 +63,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-width: 120rpx;  // 增加最小宽度确保每个图标有足够空间
-      margin-right: 30rpx;  // 增加间距
+      min-width: 120rpx; // 增加最小宽度确保每个图标有足够空间
+      margin-right: 30rpx; // 增加间距
       font-size: $uni-font-size-sm;
 
       img {
